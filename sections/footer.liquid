@@ -1,0 +1,321 @@
+<footer class="two-column-section dark-style">
+  <div class="two-column-section__wrapper">
+    {% for block in section.blocks %}
+      {% case block.type %}
+        {% when 'menu' %}
+          <div class="two-column-section__left-col" {{ block.shopify_attributes }}>
+            <h3 class="column-heading">{{ block.settings.menu_title | default: 'Navegación' }}</h3>
+            {% if linklists[block.settings.menu_links].links.size > 0 %}
+              <ul class="footer-menu-list">
+                {% for link in linklists[block.settings.menu_links].links %}
+                  <li class="footer-menu-list-item">
+                    <a href="{{ link.url }}" class="footer-menu-list-link">{{ link.title }}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p class="placeholder-text">Por favor, selecciona un menú en la configuración de este bloque.</p>
+            {% endif %}
+          </div>
+
+        {% when 'newsletter' %}
+          <div class="two-column-section__right-col" {{ block.shopify_attributes }}>
+            <h3 class="column-heading">{{ block.settings.newsletter_heading | default: 'Suscríbete a nuestra Newsletter' }}</h3>
+            <p class="newsletter-description">{{ block.settings.newsletter_description | default: 'Sé el primero en enterarte de nuestras colecciones exclusivas y ofertas especiales.' }}</p>
+            {% form 'customer' %}
+              {{ form.posted_successfully_message }}
+              {{ form.errors | default_errors }}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <div class="newsletter-form-input-group">
+                <input
+                  type="email"
+                  name="contact[email]"
+                  id="NewsletterForm--{{ section.id }}"
+                  class="newsletter-input"
+                  value="{% if customer %}{{ customer.email }}{% endif %}"
+                  placeholder="Tu email"
+                  required
+                  aria-label="Tu dirección de correo electrónico"
+                >
+                <button type="submit" name="commit" class="newsletter-button">
+                  Suscribirme
+                </button>
+              </div>
+            {% endform %}
+          </div>
+      {% endcase %}
+    {% endfor %}
+  </div>
+</footer>
+
+<style>
+  /* --- Estilos Generales para Sección Oscura --- */
+  .two-column-section.dark-style {
+    background-color: #1a1a1a; /* Fondo muy oscuro, casi negro */
+    padding: 80px 0; /* Más padding para una sensación de lujo */
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Fuentes limpias y profesionales */
+    color: #f0f0f0; /* Texto claro para contraste */
+  }
+
+  .two-column-section__wrapper {
+    max-width: 1280px; /* Un poco más de ancho */
+    margin: 0 auto;
+    padding: 0 30px; /* Más padding lateral */
+    display: flex;
+    justify-content: space-between;
+    gap: 60px; /* Mayor espacio entre columnas */
+    flex-wrap: wrap;
+  }
+
+  .two-column-section__left-col,
+  .two-column-section__right-col {
+    flex: 1;
+    min-width: 320px; /* Ancho mínimo ligeramente mayor */
+  }
+
+  .column-heading {
+    font-size: 1.8em; /* Títulos más grandes y prominentes */
+    font-weight: 700;
+    margin-bottom: 30px; /* Más espacio debajo del título */
+    color: #e0e0e0; /* Título en gris claro para el fondo oscuro */
+    position: relative;
+    padding-bottom: 12px; /* Espacio para la línea decorativa */
+    letter-spacing: 0.05em; /* Ligero espaciado entre letras para elegancia */
+    text-transform: uppercase; /* Mayúsculas para un toque de sofisticación */
+  }
+
+  .column-heading::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 60px; /* Línea decorativa más larga y audaz */
+    height: 4px;
+    background-color: #a08a40; /* Tono dorado/bronce como acento de lujo */
+    border-radius: 3px;
+  }
+
+  /* --- Estilos del Menú de Navegación (Oscuro) --- */
+  .footer-menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-menu-list-item:not(:last-child) {
+    margin-bottom: 12px; /* Más espacio entre los ítems del menú */
+  }
+
+  .footer-menu-list-link {
+    text-decoration: none;
+    color: #cccccc; /* Color de texto más suave */
+    font-size: 1.15em;
+    font-weight: 400; /* Peso de fuente más ligero para legibilidad */
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+  }
+
+  .footer-menu-list-link:hover {
+    color: #a08a40; /* Acento dorado al pasar el ratón */
+    text-decoration: underline;
+  }
+
+  .placeholder-text {
+    color: #888888; /* Texto más tenue para el placeholder */
+    font-size: 0.9em;
+  }
+
+  /* --- Estilos del Formulario de Newsletter (Oscuro) --- */
+  .newsletter-description {
+    font-size: 1.05em;
+    line-height: 1.6;
+    margin-bottom: 30px; /* Más espacio */
+    color: #b0b0b0; /* Descripción en tono gris */
+  }
+
+  .newsletter-form-input-group {
+    display: flex;
+    background-color: #2c2c2c; /* Fondo del grupo de input/botón */
+    border: 1px solid #444; /* Borde más oscuro */
+    border-radius: 8px; /* Bordes más redondeados */
+    overflow: hidden;
+  }
+
+  .newsletter-input {
+    flex-grow: 1;
+    padding: 14px 18px; /* Más padding */
+    border: none;
+    outline: none;
+    font-size: 1.05em;
+    color: #f0f0f0; /* Texto del input claro */
+    background-color: transparent; /* Fondo transparente para mostrar el fondo del grupo */
+  }
+
+  .newsletter-input::placeholder {
+    color: #888; /* Placeholder más claro para contraste */
+  }
+
+  .newsletter-button {
+    background-color: #a08a40; /* Botón de acento dorado */
+    color: #1a1a1a; /* Texto oscuro en el botón dorado */
+    border: none;
+    padding: 14px 25px; /* Más padding en el botón */
+    font-size: 1.05em;
+    font-weight: 700; /* Texto del botón audaz */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    flex-shrink: 0;
+    text-transform: uppercase; /* Texto en mayúsculas */
+    letter-spacing: 0.08em;
+  }
+
+  .newsletter-button:hover {
+    background-color: #c4ae6d; /* Dorado más claro al pasar el ratón */
+    transform: translateY(-2px); /* Pequeña elevación */
+  }
+
+  /* Mensajes de éxito y error del formulario de Shopify (adaptados a tema oscuro) */
+  .form-message {
+    margin-top: 20px;
+    padding: 12px 18px;
+    border-radius: 6px;
+    font-size: 0.95em;
+    line-height: 1.4;
+  }
+
+  .form-message--success {
+    background-color: #28a745; /* Verde oscuro para éxito */
+    color: #ffffff; /* Texto blanco */
+    border: 1px solid #28a745;
+  }
+
+  .form-message--error {
+    background-color: #dc3545; /* Rojo oscuro para error */
+    color: #ffffff; /* Texto blanco */
+    border: 1px solid #dc3545;
+  }
+
+  /* --- Media Queries para responsividad (Oscuro) --- */
+  @media (max-width: 1024px) {
+    .two-column-section__wrapper {
+      gap: 40px;
+      padding: 0 25px;
+    }
+    .column-heading {
+      font-size: 1.6em;
+      margin-bottom: 25px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .two-column-section.dark-style {
+      padding: 60px 0;
+    }
+    .two-column-section__wrapper {
+      flex-direction: column;
+      gap: 40px;
+      padding: 0 20px;
+    }
+    .column-heading {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      text-align: left; /* Alineación izquierda en móviles */
+    }
+    .column-heading::after {
+      width: 50px;
+    }
+    .newsletter-form-input-group {
+      flex-direction: column;
+      border: none;
+      background-color: transparent; /* Fondo transparente cuando se apila */
+    }
+    .newsletter-input {
+      border: 1px solid #444;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      background-color: #2c2c2c; /* Fondo del input individual */
+    }
+    .newsletter-button {
+      border-radius: 8px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .two-column-section.dark-style {
+      padding: 40px 0;
+    }
+    .column-heading {
+      font-size: 1.3em;
+    }
+    .column-heading::after {
+      width: 40px;
+      height: 3px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Footer",
+  "tag": "footer",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menú del Footer",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_title",
+          "label": "Título del Menú",
+          "default": "Navegación Rápida"
+        },
+        {
+          "type": "link_list",
+          "id": "menu_links",
+          "label": "Seleccionar Menú",
+          "default": "main-menu"
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Suscripción a Newsletter",
+      "settings": [
+        {
+          "type": "text",
+          "id": "newsletter_heading",
+          "label": "Título de Newsletter",
+          "default": "Suscríbete a nuestra Newsletter"
+        },
+        {
+          "type": "textarea",
+          "id": "newsletter_description",
+          "label": "Descripción de Newsletter",
+          "default": "Sé el primero en enterarte de nuestras colecciones exclusivas y ofertas especiales."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer Elegante (Predeterminado)",
+      "blocks": [
+        {
+          "type": "menu",
+          "settings": {
+            "menu_title": "Menú Principal",
+            "menu_links": "main-menu" // O el handle de tu menú principal
+          }
+        },
+        {
+          "type": "newsletter",
+          "settings": {
+            "newsletter_heading": "Mantente Informado",
+            "newsletter_description": "Recibe novedades y ofertas exclusivas directamente en tu bandeja de entrada."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

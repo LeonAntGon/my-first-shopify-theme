@@ -1,0 +1,363 @@
+{% assign collection = collections[section.settings.featured_collection] %}
+
+{% if collection != blank %}
+  <section class="featured-collection-section">
+    <div class="container">
+      {% if section.settings.heading != blank %}
+        <h2 class="section-heading">{{ section.settings.heading }}</h2>
+      {% else %}
+        <h2 class="section-heading">{{ collection.title }}</h2>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <p class="section-description">{{ section.settings.description }}</p>
+      {% endif %}
+
+      <div class="product-grid">
+        {% for product in collection.products limit: section.settings.products_to_show %}
+          <div class="product-card">
+            <a href="{{ product.url | within: collection }}">
+              {% if product.featured_image %}
+                <img src="{{ product.featured_image | img_url: 'medium' }}"
+                     alt="{{ product.featured_image.alt | escape }}"
+                     loading="lazy">
+              {% else %}
+                {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {% endif %}
+            </a>
+            <h3 class="product-title">
+              <a href="{{ product.url | within: collection }}">{{ product.title }}</a>
+            </h3>
+            <p class="product-price">{{ product.price | money }}</p>
+            {% if product.compare_at_price > product.price %}
+              <span class="product-compare-price">{{ product.compare_at_price | money }}</span>
+            {% endif %}
+          </div>
+        {% else %}
+          <p>No hay productos en esta colección o la colección no fue encontrada.</p>
+        {% endfor %}
+      </div>
+
+      {% if section.settings.show_view_all_button and collection.products_count > section.settings.products_to_show %}
+        <div class="view-all-button-wrapper">
+          <a href="{{ collection.url }}" class="view-all-button">{{ section.settings.view_all_button_label }}</a>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+{% else %}
+  <div class="placeholder-section">
+    <div class="container">
+      <p>Por favor, selecciona una colección para destacar en esta sección.</p>
+    </div>
+  </div>
+{% endif %}
+
+
+{% schema %}
+{
+  "name": "Colección Destacada",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título de la Sección",
+      "default": "Nuestros Productos Destacados"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripción de la Sección",
+      "info": "Texto opcional debajo del título."
+    },
+    {
+      "type": "collection",
+      "id": "featured_collection",
+      "label": "Selecciona la Colección"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "label": "Productos a mostrar",
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all_button",
+      "label": "¿Mostrar botón 'Ver todo'?",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_button_label",
+      "label": "Texto del botón 'Ver todo'",
+      "default": "Ver toda la colección"
+    },
+    {
+      "type": "header",
+      "content": "Ajustes de Diseño"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color del Título",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Color de la Descripción",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "product_title_color",
+      "label": "Color del Título del Producto",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "product_price_color",
+      "label": "Color del Precio del Producto",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Color de Fondo del Botón",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Color del Texto del Botón",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Colección Destacada",
+      "category": "Colecciones"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  /* --- Mejoras en el CSS para la Sección de Colección Destacada --- */
+
+.featured-collection-section {
+  padding: 80px 0; /* Aumenta el padding para más espacio vertical */
+  text-align: center;
+  background-color: #f8f8f8; /* Color de fondo ligeramente más suave */
+}
+
+.container {
+  max-width: 1280px; /* Un poco más de ancho para pantallas grandes */
+  margin: 0 auto;
+  padding: 0 24px; /* Aumenta el padding horizontal para respiro */
+}
+
+.section-heading {
+  font-size: 3.2em; /* Título un poco más grande y prominente */
+  margin-bottom: 25px; /* Más espacio debajo del título */
+  color: {{ section.settings.heading_color }};
+  font-weight: 700; /* Asegura que el título sea audaz */
+  letter-spacing: -0.02em; /* Ligero ajuste de espaciado para un toque moderno */
+}
+
+.section-description {
+  font-size: 1.3em; /* Descripción un poco más grande */
+  margin-bottom: 50px; /* Más espacio debajo de la descripción */
+  color: {{ section.settings.description_color }};
+  max-width: 750px; /* Ancho máximo para la descripción */
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6; /* Mejora la legibilidad */
+}
+
+.product-grid {
+  display: grid;
+  /* Utiliza minmax y clamp para un control más fino en la responsividad */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px; /* Espaciado uniforme entre tarjetas */
+  justify-content: center;
+}
+
+.product-card {
+  background-color: #ffffff; /* Fondo blanco puro para la tarjeta */
+  border: 1px solid #e0e0e0; /* Borde más sutil */
+  border-radius: 12px; /* Esquinas más redondeadas */
+  padding: 20px;
+  text-align: left;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08); /* Sombra más pronunciada y suave */
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Transición más fluida */
+  display: flex;
+  flex-direction: column; /* Organiza el contenido en columna */
+  justify-content: space-between; /* Empuja el botón o precio al final si es necesario */
+}
+
+.product-card:hover {
+  transform: translateY(-8px); /* Desplazamiento más pronunciado al pasar el ratón */
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); /* Sombra más intensa al pasar el ratón */
+}
+
+.product-card img {
+  width: 100%; /* Asegura que la imagen ocupe todo el ancho disponible */
+  height: 280px; /* Altura fija para las imágenes, para uniformidad */
+  object-fit: cover; /* Recorta la imagen para que llene el espacio sin distorsionar */
+  display: block;
+  margin-bottom: 15px;
+  border-radius: 8px; /* Redondea las esquinas de la imagen */
+}
+
+.product-card .placeholder-svg {
+  width: 100%;
+  height: 280px; /* Ajusta la altura del placeholder para que coincida con las imágenes */
+  background-color: #ececec; /* Color de fondo más claro para el placeholder */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #b0b0b0; /* Color más suave para el icono del placeholder */
+  font-size: 2em; /* Tamaño del icono un poco más grande */
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.product-card .product-title {
+  font-size: 1.5em; /* Título del producto ligeramente más grande */
+  margin-bottom: 10px;
+  line-height: 1.3;
+  font-weight: 600; /* Hace el título más robusto */
+}
+
+.product-card .product-title a {
+  color: {{ section.settings.product_title_color }};
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.product-card .product-title a:hover {
+  color: #0056b3; /* Un azul más oscuro al pasar el ratón */
+}
+
+.product-card .product-price {
+  font-size: 1.3em; /* Precio un poco más grande */
+  font-weight: 700; /* Precio más audaz */
+  color: {{ section.settings.product_price_color }};
+  margin-bottom: 8px; /* Más espacio debajo del precio */
+}
+
+.product-card .product-compare-price {
+  font-size: 1em; /* Precio de comparación un poco más grande */
+  color: #a0a0a0; /* Gris más suave */
+  text-decoration: line-through;
+  margin-left: 10px;
+}
+
+.view-all-button-wrapper {
+  margin-top: 60px; /* Más espacio encima del botón */
+}
+
+.view-all-button {
+  display: inline-block;
+  padding: 18px 35px; /* Botón más grande y fácil de presionar */
+  background-color: {{ section.settings.button_background_color }};
+  color: {{ section.settings.button_text_color }};
+  text-decoration: none;
+  border-radius: 8px; /* Bordes más redondeados para el botón */
+  font-weight: bold;
+  font-size: 1.2em; /* Texto del botón ligeramente más grande */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave para el botón */
+}
+
+.view-all-button:hover {
+  background-color: {{ section.settings.button_background_color | color_darken: 15 }}; /* Se oscurece más al pasar el ratón */
+  transform: translateY(-2px); /* Pequeño efecto de elevación */
+}
+
+.placeholder-section {
+  padding: 80px 24px; /* Ajusta el padding para que coincida con el resto */
+  background-color: #f0f0f0;
+  text-align: center;
+  min-height: 250px; /* Altura mínima un poco mayor */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px; /* Añade un poco de redondeo */
+}
+
+/* --- Media Queries para una mejor Responsividad --- */
+@media (max-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Ajuste para tablets */
+    gap: 25px;
+  }
+  .section-heading {
+    font-size: 2.8em;
+  }
+  .section-description {
+    font-size: 1.15em;
+  }
+}
+
+@media (max-width: 768px) {
+  .featured-collection-section {
+    padding: 60px 0;
+  }
+  .container {
+    padding: 0 20px;
+  }
+  .section-heading {
+    font-size: 2.2em;
+    margin-bottom: 20px;
+  }
+  .section-description {
+    font-size: 1.05em;
+    margin-bottom: 40px;
+  }
+  .product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Ajuste para móviles grandes */
+    gap: 20px;
+  }
+  .product-card img, .product-card .placeholder-svg {
+    height: 200px; /* Reduce la altura de las imágenes en móviles */
+  }
+  .product-card .product-title {
+    font-size: 1.2em;
+  }
+  .product-card .product-price {
+    font-size: 1.1em;
+  }
+  .view-all-button {
+    padding: 14px 28px;
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 480px) {
+  .featured-collection-section {
+    padding: 40px 0;
+  }
+  .section-heading {
+    font-size: 1.8em;
+  }
+  .section-description {
+    font-size: 0.95em;
+    margin-bottom: 30px;
+  }
+  .product-grid {
+    grid-template-columns: 1fr; /* Una columna en móviles pequeños */
+  }
+  .product-card {
+    padding: 15px;
+  }
+  .product-card img, .product-card .placeholder-svg {
+    height: 220px; /* Ajusta la altura para una mejor visualización en una sola columna */
+  }
+}
+</style>

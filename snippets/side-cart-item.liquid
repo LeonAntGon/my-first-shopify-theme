@@ -1,0 +1,155 @@
+{% liquid
+    if liquid
+        assign key                = item.key     
+        assign url                = item.url
+        assign url                = item.url
+        assign image_url          = item.image | img_url: 'medium'
+        assign title              = item.product.title
+        assign quantity         = item.quantity
+        if item.variant.title != 'Default Title'
+            assign variant_title    = item.variant.title
+        endif
+        assign price = item.price | money
+    else
+        assign title              = '$$ITEM_TITLE$$'
+        assign image_url          = '$$IMAGE_URL$$'
+        assign variant_title      = '$$ITEM_VARIANT_TITLE$$' 
+        assign price              = '$$ITEM_PRICE$$'
+        assign quantity           = '$$ITEM_QUANTITY$$'
+    endif 
+ 
+ %}
+    
+
+
+<side-cart-item 
+    variant-id="{{ item.variant.id }}"
+    item-count="{{ item.quantity }}"
+    id="side-cart-item-{{ key }}" 
+    item-count="{{ quantity }}"
+    class="side-cart-item-{{ key }}">
+    
+  <div class="side-cart-item">
+    <!-- Product Image -->
+    <div class="side-cart-item__image">
+        <img src="{{ image_url }}" alt="{{ title }}">      
+    </div>
+
+    <!-- Product Info & Controls -->
+    <div class="side-cart-item__info">
+      <!-- Product Name -->
+      <div class="side-cart-item__name">
+        <div href="{{ url }}" style="text-decoration:none;color:inherit;">{{ title }}</div>
+        <div class="side-cart-item__variant">{{ variant_title }}</div>
+        <div class="side-cart-item__price">{{ price }}</div>
+
+      </div>
+
+      <!-- Quantity & Remove Controls -->
+      <div class="side-cart-item__controls side-cart-item__quantity">
+        <form method="post" action="/cart/change" class="side-cart-item__form">
+            <input type="hidden" name="id"       value="{{ key }}">
+            <button type="submit" name="quantity" value="{{ quantity | minus: 1 }}" class="cart-item-qty-minus" aria-label="Decrease quantity">−</button>
+            <span>{{ quantity }}</span>
+            <button type="submit" name="quantity" value="{{ quantity | plus: 1 }}"  class="cart-item-qty-plus"  aria-label="Increase quantity">+</button>
+        </form>
+
+        <form method="post" action="/cart/change" class="side-cart-item__form">
+          <input type="hidden" name="id" value="{{ key }}">
+          <input type="hidden" name="quantity" value="0">
+          <button class="cart-item-delete">🗑️</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Footer con total y checkout -->
+</side-cart-item>
+
+
+
+
+<style>
+  .side-cart-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid #e5e5e5;
+    font-family: sans-serif;
+  }
+  .side-cart-item__image {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .side-cart-item__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .side-cart-item__info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 14px;
+  }
+  .side-cart-item__name {
+    font-weight: 600;
+    color: #222;
+    margin: 0 0 4px;
+  }
+  .side-cart-item__variant {
+    color: #666;
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+  .side-cart-item__price {
+    color: #000;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .side-cart-item__controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .side-cart-item__quantity {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .side-cart-item__quantity button {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+  }
+  .side-cart-item__quantity span {
+    min-width: 20px;
+    text-align: center;
+    display: inline-block;
+  }
+  .side-cart-item__remove {
+    color: #000;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  .side-cart-item__form {
+    display: inline-block;
+    margin: 0;
+  }
+
+
+</style>

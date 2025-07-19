@@ -1,0 +1,46 @@
+<div class="responsive-image-block">
+  <img
+    src="{{ block.settings.image | img_url: 'master' }}"
+    alt="{{ block.settings.alt_text }}"
+    class="image"
+  />
+</div>
+
+<style>
+  .responsive-image-block {
+    width: 100%;
+    max-width: 200px;
+  }
+  .image {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+</style>
+
+{% schema %}
+{
+  "name": "Imagen Responsiva",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Seleccionar imagen"
+    },
+    {
+      "type": "text",
+      "id": "alt_text",
+      "label": "Texto alternativo",
+      "default": "Imagen descriptiva"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Imagen Responsiva",
+      "category": "Bloques"
+    }
+  ]
+}
+{% endschema %}

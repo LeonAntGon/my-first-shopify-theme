@@ -1,0 +1,20 @@
+<div class="blocks-group">
+    {% content_for 'blocks' %}
+</div>
+
+{% schema %}
+{
+    "name": "Group",
+    "blocks" : [
+        {
+            "type": "@theme"
+        }
+    ],
+    "presets": [
+        {
+            "name": "group",
+            "category": "Layout"
+        }
+    ]
+}
+{% endschema %}

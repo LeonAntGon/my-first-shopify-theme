@@ -1,0 +1,126 @@
+{% comment %}
+  header.liquid
+  Encabezado reutilizable para tu tienda eCommerce
+{% endcomment %}
+
+
+<header class="site-header">
+  <div class="header-inner">
+    <!-- Logo -->
+    <div class="site-logo">
+      {% if settings.logo %}
+        <a href="{{ routes.root_url }}">
+          <img src="{{ settings.logo | img_url: 'master' }}" alt="{{ shop.name }}">
+        </a>
+      {% else %}
+        <a href="{{ routes.root_url }}" class="nav-link">{{ shop.name }}</a>
+      {% endif %}
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav-menu" role="navigation">
+      {% for link in linklists.main-menu.links %}
+        <div class="nav-item">
+          <a href="{{ link.url }}" class="nav-link">{{ link.title }}</a>
+        </div>
+      {% endfor %}
+    </nav>
+
+    <!-- Search & Cart -->
+    <div class="header-actions">
+      <!-- Search -->
+      <form action="/search" method="get" class="search-form">
+        <input type="search" name="q" placeholder="Buscar…" class="search-input">
+        <button type="submit" class="search-button" aria-label="Buscar">
+          🔍
+        </button>
+      </form>
+      <!-- Cart -->
+      <a
+      id="open-sidebar-btn"
+      class="cart-btn" aria-label="Ver carrito">
+        🛒
+        {% if cart.item_count > 0 %}
+          <span class="cart-count">{{ cart.item_count }}</span>
+        {% endif %}
+      </a>
+    </div>
+  </div>
+</header>
+
+<style>
+  /* Header Styles */
+  .site-header {
+    background-color: #fff;
+    border-bottom: 1px solid #e1e1e1;
+    padding: 1rem 2rem;
+  }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .site-logo img {
+    max-height: 50px;
+    width: auto;
+    display: block;
+  }
+  .nav-menu {
+    display: flex;
+    gap: 1.5rem;
+  }
+  .nav-item {}
+  .nav-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+  }
+  .nav-link:hover {
+    color: lab(48% 50.11 -81.73);
+  }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .search-form {
+    position: relative;
+  }
+  .search-input {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px;
+  }
+  .search-button {
+    position: absolute;
+    right: 0.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  .cart-btn {
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.25rem;
+  }
+  .cart-count {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background-color: #e74c3c;
+    color: #fff;
+    border-radius: 50%;
+    padding: 0 6px;
+    font-size: 0.75rem;
+    line-height: 1;
+  }
+</style>
+

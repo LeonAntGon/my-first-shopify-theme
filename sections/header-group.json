@@ -1,0 +1,27 @@
+{
+  "type": "header",
+  "name": "Header Group",
+  "sections": {
+    "announcement_bar_3pWNKC": {
+      "type": "announcement-bar",
+      "name": "Announcement Bar",
+      "settings": {
+        "announcement_text": "Welcome to Gen's store",
+        "background_color": "#2262e2",
+        "text_color": "#030303"
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {}
+    },
+    "side-cart": {
+      "type": "sidebar"
+    }
+  },
+  "order": [
+    "announcement_bar_3pWNKC",
+    "header",
+    "side-cart"
+  ]
+}

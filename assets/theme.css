@@ -1,0 +1,41 @@
+*{
+    box-sizing: border-box;
+    
+}
+
+body{
+    margin:0;
+    font-family: var(--font-body--family);
+}
+h1,h2,h3,h4,h5,h6 {
+    font-family: var(--font-heading--family);
+}
+.container {
+    width: 80%; /* Establece un ancho del 90% del contenedor padre */
+    max-width: 1200px; /* Limita el ancho máximo para pantallas grandes */
+    margin: 0 auto; /* Centra el contenedor horizontalmente */
+    padding: 20px; /* Añade espacio interno alrededor del contenido */
+    background-color: #f8f8f8; /* Color de fondo ligero */
+    border: 1px solid #ddd; /* Borde sutil */
+    border-radius: 8px; /* Esquinas ligeramente redondeadas */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave para profundidad */
+}
+
+.button {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: #222;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease;
+  }
+
+  .button:hover {
+    background-color: #444;
+    color: #444;
+    box-shadow: '0 2px 8px rgb(0,0,0,0,10)';
+    outline: none;
+  }
